@@ -105,11 +105,48 @@ body {
   -ms-grid-column: 4;
 }
 .content-wrapper .content-item .date-label {
-  background: lightcoral;
   line-height: 20px;
   width: 40px;
   text-align: center;
+}
+.content-wrapper .content-item .holiday-span, .content-wrapper .content-item .red-span, .content-wrapper .content-item .event-span, .content-wrapper .content-item .orange-span, .content-wrapper .content-item .waning-span {
+  position: absolute;
+  bottom: 0;
+  font-size: 12px;
+  display: block;
+  padding: 0 3px;
+}
+.content-wrapper .content-item .holiday-span {
+  right: 0;
+  border: 1px solid darkgray;
+  border-bottom: none;
+  border-right: none;
+}
+.content-wrapper .content-item .red-span {
+  right: 0;
+  color: red;
+}
+.content-wrapper .content-item .event-span, .content-wrapper .content-item .orange-span, .content-wrapper .content-item .waning-span {
+  right: 15px;
+  top: 10px;
+  height: 16px;
   color: white;
+  text-align: center;
+  background: #4fb431;
+}
+.content-wrapper .content-item .orange-span {
+  background: orange;
+}
+.content-wrapper .content-item .waning-span {
+  background: #9e0b1e;
+}
+.content-wrapper .content-item > ul {
+  margin-top: 5px;
+  margin-left: 20px;
+}
+.content-wrapper .content-item > ul > li {
+  font-size: 12px;
+  list-style: none;
 }
 
 /*# sourceMappingURL=timeCard.css.map */
