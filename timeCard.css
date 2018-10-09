@@ -17,7 +17,6 @@ body {
 .wrapper {
   padding: 10px;
   display: flex;
-  display: -ms-flexbox;
   height: 100%;
 }
 .wrapper .nav {
@@ -26,12 +25,9 @@ body {
 }
 .wrapper .content {
   flex: 1;
-  -ms-flex: 1;
   height: 100%;
   display: flex;
-  display: -ms-flexbox;
   flex-direction: column;
-  -ms-flex-direction: column;
 }
 
 .nav-header {
@@ -52,7 +48,6 @@ body {
 
 .nav-month {
   display: flex;
-  display: -ms-flexbox;
   flex-wrap: wrap;
   width: 100%;
 }
@@ -67,16 +62,25 @@ body {
   cursor: pointer;
 }
 
+.icon-clear {
+  position: absolute;
+  display: block;
+  background: url(image/clear.png);
+  width: 16px;
+  height: 16px;
+  z-index: 999;
+  right: -5px;
+  top: 15px;
+}
+
 .content-header {
   height: 36px;
   display: flex;
-  display: -ms-flexbox;
   border-bottom: 1px solid darkgray;
   vertical-align: middle;
 }
 .content-header > span {
   flex: 1;
-  -ms-flex: 1;
   font-weight: 600;
   font-size: 20px;
   padding-left: 5px;
@@ -85,13 +89,9 @@ body {
 
 .content-wrapper {
   flex: 1;
-  -ms-flex: 1;
   display: grid;
-  display: -ms-grid;
   grid-template-columns: repeat(7, 1fr);
   grid-template-rows: repeat(5, 1fr);
-  -ms-grid-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
-  -ms-grid-rows: 1fr 1fr 1fr 1fr 1fr;
 }
 .content-wrapper .content-item {
   border: 1px solid darkgray;
@@ -101,8 +101,6 @@ body {
 }
 .content-wrapper .content-item:nth-of-type(7n), .content-wrapper .content-item:nth-of-type(7n+1) {
   background: lightgreen;
-  -ms-grid-row: 1;
-  -ms-grid-column: 4;
 }
 .content-wrapper .content-item .date-label {
   line-height: 20px;

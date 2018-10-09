@@ -1,23 +1,42 @@
 /**
- * Created by xiaoyanli on 2018/9/27.
+ * Created by xiaoyanli on 2018/10/8.
  */
 ;(function(){
 
-    initTimeCard();
+    initTimeCard();     //初始化事件面板信息
     handleSelector();   //可输入下拉框值的变化情况
     handleTimeSpan();   //点击span触发
-    inputChange();     //输入框输入内容
+
+    //初始化右边timeCard
+    function initTimeCard() {
+        let contentArea = document.getElementsByClassName("content-wrapper")[0]; //加载的内容区
+        for ( let row = 0 ; row < 5; row++ ) {   //五行七列
+            for ( let col = 0; col < 7; col++ ) { //timeCard内容div区
+                let timeCardDiv = document.createElement("div");
+                timeCardDiv.setAttribute("class","content-item");
+                timeCardDiv.setAttribute("row", row+1);
+                timeCardDiv.setAttribute("col", col);
+                contentArea.appendChild(timeCardDiv);
+            }
+        }
+    }
 
     //下拉框选择
     function handleSelector() {
         let selector = document.getElementById("select-year"),
             span = document.getElementsByClassName('nav-month')[0].children,
-            input = document.getElementById("input-year");
+            input = document.getElementById("input-year"),
+            defaultSpan = document.getElementsByClassName('nav-month')[0].children[0];
+            defaultSpan.style.background = 'lightcoral';
+            input.value = selector.options[0].value;
+            resetRecord(span,0);
+            getDateToWeek(input.value, defaultSpan.innerText);
+
             selector.addEventListener(
                 'change',
-                function(event) {
-                   let optionIndex = this.selectedIndex,
-                       defaultSpan = document.getElementsByClassName('nav-month')[0].children[0];
+                function() {
+                   let optionIndex = this.selectedIndex;
+                       defaultSpan.style.background = 'lightcoral';
                        input.value = this.options[optionIndex].value;
                        resetRecord(span,0);
                        getDateToWeek(input.value, defaultSpan.innerText);
@@ -25,10 +44,27 @@
             );
     }
 
-    //输入框输入内容
-    function inputChange() {
-
+    //选择月份span
+    function handleTimeSpan() {
+        let span = document.getElementsByClassName('nav-month')[0].children,
+            input = document.getElementById("input-year");
+        for ( let index = 0 ; index < span.length; index++ ) {
+            span[index].addEventListener(
+                'click',
+                function() {
+                    if ( input.value === "" ) {
+                        alert("请选择或输入想要查询的年份！") ;
+                        return false;
+                    } else {
+                        span[index].style.background = 'lightcoral';
+                        resetRecord(span,index);
+                        getDateToWeek(input.value,span[index].innerText);
+                    }
+                }
+            );
+        }
     }
+
 
     //根据年月获取日期和星期的对应关系
     function getDateToWeek( year, monthV ) {
@@ -71,26 +107,6 @@
         return monthValue[month];
     }
 
-    //选择月份span
-    function handleTimeSpan() {
-        let span = document.getElementsByClassName('nav-month')[0].children,
-            input = document.getElementById("input-year");
-            for ( let index = 0 ; index < span.length; index++ ) {
-                span[index].addEventListener(
-                    'click',
-                    function(event) {
-                        if ( input.value === "" ) {
-                            alert("请选择或输入想要查询的年份！") ;
-                            return false;
-                        } else {
-                            span[index].style.background = 'lightcoral';
-                            resetRecord(span,index);
-                            getDateToWeek(input.value,span[index].innerText);
-                        }
-                    }
-                );
-            }
-    }
 
     //剩余未选中的index
     function resetRecord( span,index ) {
@@ -101,19 +117,6 @@
         }
     }
 
-    //初始化右边timeCard
-    function initTimeCard() {
-        let contentArea = document.getElementsByClassName("content-wrapper")[0]; //加载的内容区
-        for ( let row = 0 ; row < 5; row++ ) {   //五行七列
-            for ( let col = 0; col < 7; col++ ) { //timeCard内容div区
-                let timeCardDiv = document.createElement("div");
-                    timeCardDiv.setAttribute("class","content-item");
-                    timeCardDiv.setAttribute("row", row+1);
-                    timeCardDiv.setAttribute("col", col);
-                    contentArea.appendChild(timeCardDiv);
-                }
-        }
-    }
 
     //格式化日期
     function fillIntoTimeCard( timeObj ) {
@@ -121,6 +124,8 @@
             row, col, dateSpan ;
 
         initCardItem(cardItems);  //初始化timeCard
+        removeClassOfEventSpan(cardItems); //去除内容为空的背景色
+
         for ( let cardIndex = 0; cardIndex < cardItems.length; cardIndex++ ) {
             for ( let timeIndex = 0; timeIndex < timeObj.length; timeIndex++ ) {
                 row = Number.parseInt(cardItems[cardIndex].getAttribute("row"));
@@ -140,6 +145,34 @@
                     insertEventSpan(eventStr,cardItems[cardIndex]);
                     //时间事件
                     insertTimeUl(col,cardItems[cardIndex] );
+                }
+            }
+        }
+    }
+
+    //初始化timecard的值
+    function initCardItem(items) {
+        for ( let index = 0 ; index < items.length; index++ ) {
+            if ( items[index].children.length !== 0 && items[index].children[0].className === 'date-label') {
+                if ( items[index].children.length !== 2 ) {
+                    items[index].children[0].innerHTML = "";
+                    items[index].children[1].innerHTML = "";
+                    items[index].children[2].innerHTML = "";
+                    items[index].children[3].children[0].innerHTML = "";
+                    items[index].children[3].children[1].innerHTML = "";
+                } else {
+                    items[index].children[0].innerHTML = "";
+                    items[index].children[1].innerHTML = "";
+                }
+            }
+        }
+    }
+
+    function removeClassOfEventSpan(items) {
+        for ( let index = 0 ; index < items.length; index++  ) {
+            if ( items[index].children.length !== 0 && items[index].children[0].innerHTML === "") {
+                if ( items[index].children.length !== 2  ) {
+                    items[index].children[2].removeAttribute("class");
                 }
             }
         }
@@ -192,7 +225,15 @@
     function judgeHoliday(date, week) {
         const holiday = {
             '01-01': '元旦',
-            '02-14': '情人节'
+            '02-14': '情人节',
+            '03-08': '妇女节',
+            '04-01': '愚人节',
+            '05-01': '劳动节',
+            '06-01': '儿童节',
+            '07-01': '建党节',
+            '08-01': '建军节',
+            '09-10': '教师节',
+            '10-01': '国庆节'
         };
         if ( holiday[date] !== undefined ) {
             return "节假日";
@@ -217,23 +258,7 @@
     }
 
 
-    //初始化timecard的值
-    function initCardItem(items) {
-        for ( let index = 0 ; index < items.length; index++ ) {
-            if ( items[index].children.length !== 0 && items[index].children[0].className === 'date-label') {
-                if ( items[index].children.length !== 2 ) {
-                    items[index].children[0].innerHTML = "";
-                    items[index].children[1].innerHTML = "";
-                    items[index].children[2].innerHTML = "";
-                    items[index].children[3].children[0].innerHTML = "";
-                    items[index].children[3].children[1].innerHTML = "";
-                } else {
-                    items[index].children[0].innerHTML = "";
-                    items[index].children[1].innerHTML = "";
-                }
-            }
-        }
-    }
+
 
 
 })();
